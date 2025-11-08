@@ -218,7 +218,7 @@
 
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-top: 15px;
         }
@@ -302,6 +302,16 @@
             }
             
             .settings {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stat-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -499,15 +509,15 @@
                                 <div class="stat-value">${Math.ceil(fire_my)}개</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-label">하루 평균 판수</div>
+                                <div class="stat-label">하루 평균 필요 판수</div>
                                 <div class="stat-value">${Math.ceil(pans_total / days)}판</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-label">하루 평균 시간</div>
+                                <div class="stat-label">하루 평균 필요 투자 시간</div>
                                 <div class="stat-value">${Math.ceil(time_min / days)}분</div>
                             </div>
                             <div class="stat-item">
-                                <div class="stat-label">하루 평균 불캔</div>
+                                <div class="stat-label">하루 평균 필요 불캔</div>
                                 <div class="stat-value">${Math.ceil(fire_my / days)}개</div>
                             </div>
                         </div>
@@ -549,15 +559,15 @@
                             <div class="stat-value">${Math.ceil(fire_my)}개</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">하루 평균 판수</div>
+                            <div class="stat-label">하루 평균 필요 판수</div>
                             <div class="stat-value">${Math.ceil(target_pans_total / days)}판</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">하루 평균 시간</div>
+                            <div class="stat-label">하루 평균 필요 투자 시간</div>
                             <div class="stat-value">${Math.ceil(time_min / days)}분</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-label">하루 평균 불캔</div>
+                            <div class="stat-label">하루 평균 필요 불캔</div>
                             <div class="stat-value">${Math.ceil(fire_my / days)}개</div>
                         </div>
                     </div>

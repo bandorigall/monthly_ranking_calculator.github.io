@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>걸플 월간 랭킹 계산기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6; }
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .calculate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .reset-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .reset-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .tier-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+        }
+
+        .tier-card.silver {
+            border-left-color: #c0c0c0;
+            background: linear-gradient(135deg, #e8e8e8 0%, #d3d3d3 100%);
+        }
+
+        .tier-card.gold {
+            border-left-color: #ffd700;
+            background: linear-gradient(135deg, #fff4cc 0%, #ffe066 100%);
+        }
+
+        .tier-card.platinum {
+            border-left-color: #00d4ff;
+            background: linear-gradient(135deg, #ccf5ff 0%, #66e0ff 100%);
+        }
+
+        .tier-card.target {
+            border-left-color: #ff6b6b;
+            background: linear-gradient(135deg, #ffe0e0 0%, #ffb3b3 100%);
+        }
+
+        .tier-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .reward-box {
+            background: rgba(255,255,255,0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 2px dashed #667eea;
+        }
+
+        .info-text {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            line-height: 1.8;
+        }
+
+        .credit-box {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: right;
+        }
+
+        .credit-text {
+            color: #333;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .source-link {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .source-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .settings {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎸 뱅드림 걸즈밴드파티! 월간랭킹 계산기 🎸</h1>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: #667eea;">⚙️ 설정</h2>
+            
+            <div class="toggle-group">
+                <label style="font-weight: 600; color: #667eea;">걸파패스 보유 여부:</label>
+                <div class="toggle active" id="gppassToggle" onclick="toggleGPPass()">
+                    <div class="toggle-slider" style="transform: translateX(30px);"></div>
+                </div>
+                <span id="gppassLabel">보유</span>
+            </div>
+
+            <div class="settings">
+                <div>
+                    <div class="input-group">
+                        <label>🔥 하루 사용 자연불 개수</label>
+                        <input type="number" id="jayeon" value="30" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>⏱️ 곡당 소요시간 (분)</label>
+                        <input type="number" id="gokdang" value="3" min="1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>🔥 판당 사용 불 개수</label>
+                        <select id="firePerOne" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                            <option value="0">0불</option>
+                            <option value="1">1불</option>
+                            <option value="2">2불</option>
+                            <option value="3" selected>3불</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="input-group">
+                        <label>🎯 현재 챌린지라이브 포인트</label>
+                        <input type="number" id="chlPt" value="8000" min="0">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>🎮 챌린지 판당 포인트</label>
+                        <select id="chlOnePt" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                            <option value="200">200pt</option>
+                            <option value="400">400pt</option>
+                            <option value="800">800pt</option>
+                            <option value="1600" selected>1600pt</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>🎯 목표 포인트</label>
+                        <input type="number" id="targetPt" value="8000" min="0">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="input-group">
+                        <label>📊 현재 스코어</label>
+                        <input type="number" id="scoreMy" value="250" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculate()">✨ 계산하기 ✨</button>
+            
+            <div class="credit-box">
+                <div class="credit-text">made by Bangbung Kim</div>
+                <a href="https://gall.dcinside.com/mgallery/board/view?id=bang_dream&no=5730508" 
+                   target="_blank" 
+                   class="source-link">
+                    📊 정보 출처: 디시인사이드 뱅드림 갤러리
+                </a>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="info-text" id="infoText"></div>
+            
+            <div id="tierResults"></div>
+            
+            <div id="targetResult"></div>
+        </div>
+
+        <button class="reset-btn" id="resetBtn" onclick="resetCalculator()">
+            🔄 초기화
+        </button>
+    </div>
+
+    <script>
+        let gppass = true;
+
+        function toggleGPPass() {
+            gppass = !gppass;
+            const toggle = document.getElementById('gppassToggle');
+            const label = document.getElementById('gppassLabel');
+            const slider = toggle.querySelector('.toggle-slider');
+            
+            if (gppass) {
+                toggle.classList.add('active');
+                label.textContent = '보유';
+                slider.style.transform = 'translateX(30px)';
+            } else {
+                toggle.classList.remove('active');
+                label.textContent = '미보유';
+                slider.style.transform = 'translateX(0)';
+            }
+        }
+
+        function calculate() {
+            const JAYEON = parseInt(document.getElementById('jayeon').value);
+            const GOKDANG = parseInt(document.getElementById('gokdang').value);
+            const CHL_PT_TOTAL = parseInt(document.getElementById('chlPt').value);
+            const CHL_ONE_PT = parseInt(document.getElementById('chlOnePt').value);
+            const TARGET_POINTS = parseInt(document.getElementById('targetPt').value);
+            const SCORE_MY = parseInt(document.getElementById('scoreMy').value);
+            const FIRE_PER_ONE = parseInt(document.getElementById('firePerOne').value);
+
+            const points = [[1,5,10,15,10], [1,5,6,7,10]];
+            const pts = gppass ? points[0] : points[1];
+            
+            const cut = [2500, 3500, 5000];
+            const cutname = ['실버', '골드', '플래티넘'];
+            const cutClass = ['silver', 'gold', 'platinum'];
+            const bosang = [
+                '50스타(즉시) 먼슬리랭킹 실버칭호, 100파랑큐브(종료후)',
+                '250스타(즉시), 먼슬리랭킹 골드칭호, 200파랑큐브(종료후)',
+                '500스타(즉시), 먼슬리랭킹 플래티넘칭호, 1골드큐브(종료후)'
+            ];
+
+            const CHL_PANS_TOTAL = Math.floor(CHL_PT_TOTAL / CHL_ONE_PT);
+
+            const now = new Date();
+            const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            const days = Math.ceil((nextMonth - now) / (1000 * 60 * 60 * 24));
+            
+            const today = now.toLocaleDateString('ko-KR', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            });
+
+            // 정보 텍스트
+            let infoHtml = `
+                <strong style="font-size: 1.1em; color: #667eea;">📋 계산 기준</strong><br><br>
+                오늘 날짜: ${today}<br>
+                현재 스코어: ${SCORE_MY}pt | 남은 일수: ${days}일<br>
+                <hr style="margin: 15px 0; border: none; border-top: 2px solid #e0e0e0;">
+                걸파패스: ${gppass ? '보유' : '미보유'} | 하루 자연불: ${JAYEON}개 | 곡당 시간: ${GOKDANG}분 | 곡당 불: ${FIRE_PER_ONE}개<br>
+                챌린지 판당: ${CHL_ONE_PT}pt | 챌린지: ${CHL_PT_TOTAL}pt (${CHL_PANS_TOTAL}판)
+            `;
+            document.getElementById('infoText').innerHTML = infoHtml;
+
+            // 등급별 계산
+            let tierHtml = '';
+            for (let i = 0; i < 3; i++) {
+                const remain_pts = Math.max(cut[i] - SCORE_MY - CHL_PANS_TOTAL * pts[4], 0);
+                const pans_total = remain_pts / pts[FIRE_PER_ONE] + CHL_PANS_TOTAL;
+                const pans = Math.max(pans_total, 0);
+                
+                const time_min = pans_total * GOKDANG;
+                const time_hour = pans_total * GOKDANG / 60;
+                
+                const fire_total = pans * 3;
+                const fire_my = Math.max(fire_total - days * JAYEON, 0);
+
+                tierHtml += `
+                    <div class="tier-card ${cutClass[i]}">
+                        <div class="tier-title">
+                            ${i === 0 ? '🥈' : i === 1 ? '🥇' : '💎'} ${cutname[i]} ${cut[i]}pt
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">총 필요 판수</div>
+                                <div class="stat-value">${Math.ceil(pans_total)}판</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">필요 투자 시간</div>
+                                <div class="stat-value">${time_hour.toFixed(1)}시간</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">필요 불캔</div>
+                                <div class="stat-value">${Math.ceil(fire_my)}개</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">하루 평균 판수</div>
+                                <div class="stat-value">${Math.ceil(pans_total / days)}판</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">하루 평균 시간</div>
+                                <div class="stat-value">${Math.ceil(time_min / days)}분</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">하루 평균 불캔</div>
+                                <div class="stat-value">${Math.ceil(fire_my / days)}개</div>
+                            </div>
+                        </div>
+                        <div class="reward-box">
+                            <strong>🎁 보상:</strong> ${bosang[i]}
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('tierResults').innerHTML = tierHtml;
+
+            // 목표 포인트 계산
+            const remain_pts = Math.max(TARGET_POINTS - SCORE_MY - CHL_PANS_TOTAL * pts[4], 0);
+            const target_pans_total = Math.max(remain_pts / pts[FIRE_PER_ONE] + CHL_PANS_TOTAL, 0);
+            const target_pans = Math.max(target_pans_total - CHL_PANS_TOTAL, 0);
+            
+            const time_min = target_pans_total * GOKDANG;
+            const time_hour = time_min / 60;
+            
+            const fire_total = target_pans * 3;
+            const fire_my = Math.max(fire_total - days * JAYEON, 0);
+
+            let targetHtml = `
+                <div class="tier-card target">
+                    <div class="tier-title">
+                        🎯 내 목표: ${TARGET_POINTS}pt
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">총 필요 판수</div>
+                            <div class="stat-value">${Math.ceil(target_pans_total)}판</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">필요 투자 시간</div>
+                            <div class="stat-value">${time_hour.toFixed(1)}시간</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">필요 불캔</div>
+                            <div class="stat-value">${Math.ceil(fire_my)}개</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">하루 평균 판수</div>
+                            <div class="stat-value">${Math.ceil(target_pans_total / days)}판</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">하루 평균 시간</div>
+                            <div class="stat-value">${Math.ceil(time_min / days)}분</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">하루 평균 불캔</div>
+                            <div class="stat-value">${Math.ceil(fire_my / days)}개</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('targetResult').innerHTML = targetHtml;
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('resetBtn').classList.add('show');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetCalculator() {
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('resetBtn').classList.remove('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

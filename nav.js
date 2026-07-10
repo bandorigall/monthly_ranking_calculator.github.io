@@ -3,13 +3,16 @@
    페이지에서 <script src="nav.js"></script> 로 삽입. */
 (function () {
   var items = [
-    ['오프이벤',   'https://bandorigall.github.io/bangdream_events.github.io/'],
-    ['발매곡목록', 'https://bandorigall.github.io/bandori_songs.github.io/'],
-    ['갤대회',     'https://bandorigall.github.io/bangdream_competition.github.io/'],
-    ['맛집',       'https://bandorigall.github.io/banggall_food.github.io/'],
-    ['걸파툴',     'https://bandorigall.github.io/tools_girlsbandparty.github.io/'],
-    ['로젤내한',   'https://bandorigall.github.io/roselia_korea.github.io/'],
-    ['생일페이지', 'https://bandorigall.github.io/others.github.io/birthday/']
+    ['오프이벤',    'https://bandorigall.github.io/bangdream_events.github.io/'],
+    ['발매곡목록',  'https://bandorigall.github.io/bandori_songs.github.io/'],
+    ['갤대회',      'https://bandorigall.github.io/bangdream_competition.github.io/'],
+    ['맛집',        'https://bandorigall.github.io/banggall_food.github.io/'],
+    ['걸파툴',      'https://bandorigall.github.io/tools_girlsbandparty.github.io/'],
+    ['생일페이지',  'https://bandorigall.github.io/others.github.io/birthday/'],
+    ['MBTI테스트',  'https://bandorigall.github.io/others.github.io/bangdream_mbti_korean/'],
+    ['마이고센터',  'https://bandorigall.github.io/others.github.io/mygocenter/'],
+    ['캐릭터프로필', 'https://bandorigall.github.io/others.github.io/our_notes_profile/'],
+    ['김치쿠라',    'https://bandorigall.github.io/others.github.io/kimchikura/']
   ];
 
   var curPath = location.pathname.replace(/index\.html$/, '');

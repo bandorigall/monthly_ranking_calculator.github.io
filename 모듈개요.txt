@@ -1,0 +1,28 @@
+================================================================
+월간랭킹 (monthly_ranking_calculator.github.io) — 모듈 개요 (기술 명세)
+================================================================
+
+0. 현재 상태: 이관 완료(리다이렉트 스텁)
+  걸파 월간랭킹 계산기는 "걸파 툴 모음"으로 통합되었다. 이 레포의
+  index.html은 통합 사이트의 #monthly 탭으로 자동 이동시키는 안내 페이지다.
+  실동작 코드는 tools_girlsbandparty.github.io/monthly/ 에 있다.
+
+1. 저장소 구성
+  index.html   리다이렉트 스텁(canonical + meta refresh 3초 + JS replace).
+  monthly.ipynb  계산 로직 원본 노트북(참고용).
+  nav.js       공통 상단 네비게이션 바.
+
+2. 리다이렉트 스텁 (index.html) 동작
+  - <link rel="canonical" href=".../tools_girlsbandparty.github.io/#monthly">
+  - <meta http-equiv="refresh" content="3; url=.../#monthly">
+  - <script>location.replace(".../#monthly")</script>
+  - 안내 박스 + 수동 바로가기 링크. canonical로 중복 색인 방지.
+
+3. 계산기 본체(참고) — tools_girlsbandparty.github.io/monthly/
+  걸파 월간랭킹(한 달 누적 이벤트 포인트 순위) 목표 달성에 필요한 판수/포인트
+  등을 계산하는 정적 도구. 명세는 걸즈밴드파티 레포 monthly/index.html 참조.
+  monthly.ipynb는 계산식/데이터 산출의 원본 노트북.
+
+4. 설계 결정
+  - 삭제 대신 리다이렉트 유지로 기존 도메인/북마크 보존.
+  - meta refresh(비JS) + location.replace(즉시, 히스토리 미오염) 이중화.

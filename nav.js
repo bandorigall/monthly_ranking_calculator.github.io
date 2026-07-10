@@ -7,8 +7,8 @@
     ['발매곡목록', 'https://bandorigall.github.io/bandori_songs.github.io/'],
     ['갤대회',     'https://bandorigall.github.io/bangdream_competition.github.io/'],
     ['맛집',       'https://bandorigall.github.io/banggall_food.github.io/'],
-    ['월간랭킹',   'https://bandorigall.github.io/monthly_ranking_calculator.github.io/'],
-    ['마리나불캔', 'https://bandorigall.github.io/marinafirecan.github.io/'],
+    ['걸파툴',     'https://bandorigall.github.io/tools_girlsbandparty.github.io/'],
+    ['로젤내한',   'https://bandorigall.github.io/roselia_korea.github.io/'],
     ['생일페이지', 'https://bandorigall.github.io/others.github.io/birthday/']
   ];
 

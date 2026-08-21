@@ -14,7 +14,7 @@
     ['생일페이지',  'https://bandorigall.github.io/others.github.io/birthday/'],
     ['MBTI테스트',  'https://bandorigall.github.io/others.github.io/bangdream_mbti_korean/'],
     ['마이고센터',  'https://bandorigall.github.io/others.github.io/mygocenter/'],
-    ['캐릭터프로필', 'https://bandorigall.github.io/others.github.io/our_notes_profile/'],
+    ['아워노츠', 'https://bandorigall.github.io/others.github.io/our_notes_profile/'],
     ['김치쿠라',    'https://bandorigall.github.io/others.github.io/kimchikura/'],
     ['마이고라이브', 'https://bandorigall.github.io/others.github.io/mygo_live/'],
     ['기타도감',    'https://bandorigall.github.io/others.github.io/guitar/'],
